@@ -1,0 +1,3 @@
+# Advent of Code
+2023 Advent of Code;
+using this as an opportunity to learn python. will capture 'cheat sheet' notes on this .md file...
