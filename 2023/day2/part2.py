@@ -29,7 +29,8 @@ def processPath(path):
             result.append(dict)
         return result
 
-    #get a get the max value for each color cube...
+    #get a get the max value for each color cube... this is also
+    #represents the smallest amount of cubes for each color.
     def getMaxColor(array):
         result = []
         dict = {'red': 0, 'green': 0, 'blue': 0}
@@ -38,15 +39,6 @@ def processPath(path):
                 if value > dict[key]:
                     dict[key] = value
         return(dict)
-    
-    def getMinColor(array, maxColor):
-        dict = maxColor
-        for item in array:
-            for key, value in item.items():
-                if value < dict[key]:
-                    dict[key] = value
-        return(dict)
-
 
     def processInputLine(str):
         formattedLine = formatTextInput(str)
@@ -60,8 +52,6 @@ def processPath(path):
         result.append(processInputLine(line))
     return result
 
-parsedInput = (processPath(inputPath))
-
 def makePowerArr(arr):
     resultArr = []
     for input in arr:
@@ -71,6 +61,7 @@ def makePowerArr(arr):
         resultArr.append(exponent)
     return resultArr
 
+parsedInput = (processPath(inputPath))
 result = makePowerArr(parsedInput)
 print(sum(result))
 
