@@ -31,7 +31,7 @@ def seedCards():
         cards.append(input['card'])
     return(cards)
 
-parsedInput = parseInput(inputPath)
+parsedInput = parseInput(testPath)
 
 getCommon()
 cards = seedCards()
@@ -45,7 +45,7 @@ def getCopies(arr):
         print(f'reviewing num {num}')
         print(f" card {card} has {matches} matches")
         rangeStart = card + 1
-        rangeEnd = len(arr) + 1
+        rangeEnd = len(arr)
         if matches + card + 1 < len(arr):
             rangeEnd = rangeStart + matches
         # print(f'from {rangeStart} to {rangeEnd}')
