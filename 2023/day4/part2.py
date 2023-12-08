@@ -31,7 +31,7 @@ def seedCards():
         cards.append(input['card'])
     return(cards)
 
-parsedInput = parseInput(testPath)
+parsedInput = parseInput(inputPath)
 
 getCommon()
 cards = seedCards()
@@ -42,18 +42,11 @@ def getCopies(arr):
         item = parsedInput[num - 1]
         card = int(item['card'])
         matches = int(item['matches'])
-        print(f'reviewing num {num}')
-        print(f" card {card} has {matches} matches")
         rangeStart = card + 1
-        rangeEnd = len(arr)
-        if matches + card + 1 < len(arr):
-            rangeEnd = rangeStart + matches
-        # print(f'from {rangeStart} to {rangeEnd}')
+        rangeEnd = rangeStart + matches
         for i in range(rangeStart, rangeEnd):
-            print(f' add card {i} to the pile')
             arrCopy.append(i)
             if parsedInput[i-1].get('matches') > 0:
-                print(f"{i} also has { parsedInput[i-1].get('matches') } matches...")
                 appendWinner(i)
 
     for num in sorted(arr):
