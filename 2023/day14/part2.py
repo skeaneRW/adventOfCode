@@ -1,6 +1,7 @@
+import time
 testPath = '2023/day14/testInput1.txt'
 inputPath = '2023/day14/input.txt'
-chosenPath = inputPath
+chosenPath = testPath
 
 
 def parseInput(path):
@@ -32,14 +33,14 @@ def tilt(arr, dir):
             if colNum == len(row) - 1:
                 if len(str) > 0:
                     subArr.append(str)
-                subArr = [x for x in subArr if x != '']
+                subArr = tuple(x for x in subArr if x != '')
                 newArr.append(subArr)
     
     for rowNum, row in enumerate(newArr):
         if dir == 'north' or dir == 'west':
-            sortedRow = [sorted(val, reverse=True) for val in row]
+            sortedRow = [tuple(sorted(val, reverse=True)) for val in row]
         if dir == 'south' or dir == 'east':
-                sortedRow = [sorted(val) for val in row]
+                sortedRow = [tuple(sorted(val)) for val in row]
         sortedRow = [''.join(val) for val in sortedRow]
         newArr[rowNum] = [x for x in ''.join(sortedRow)]
     if dir == 'north' or dir == 'south':
@@ -51,6 +52,15 @@ def visualize(arr):
     for row in arr:
         print(''.join(row))
 
+def spinCycle(input):
+    result = input[:]
+    result = tilt(result, 'north')
+    result = tilt(result, 'west')
+    result = tilt(result, 'south')
+    result = tilt(result, 'east')
+    return result
+
+
 def getScore(arr):
     rowNum = len(arr)
     score = 0
@@ -58,9 +68,23 @@ def getScore(arr):
         letterOs = [char for char in row if char == 'O']
         score += rowNum * len(letterOs)
         rowNum -= 1
-    print(score)
+    return(score)
+
+startTime = time.time()
 
 input = parseInput(chosenPath)
-result = tilt(input, 'north')
-visualize(result)
-getScore(result)
+results = [input]
+scores = []
+num = 10
+print(num)
+for n in range(num):
+    results.append(spinCycle(tuple(results[-1])))
+    scores.append(getScore(results[-1]))
+
+endTime = time.time()
+
+visualize(results[-1])
+print(getScore(results[-1]))
+print(f'elapsed time: {round(endTime - startTime, 2)}')
+for i, score in enumerate(scores):
+    print(i, score)
