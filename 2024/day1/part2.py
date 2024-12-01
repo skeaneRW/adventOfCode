@@ -16,7 +16,6 @@ def getColumn(arrayType, path):
         result.append(number)
     return result
 
-# sort both arrays
 rightArr = getColumn('right', chosenPath)
 leftArr = getColumn('left', chosenPath)
 
