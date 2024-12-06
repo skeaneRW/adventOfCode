@@ -24,7 +24,7 @@ leftArr = sorted(getColumn('left', chosenPath))
 def getDifference(leftArr, rightArr):
     result = []
     for i in range(len(leftArr)):
-        result.append(abs(rightArr[i] - leftArr[i]))
+        result.append((rightArr[i] - leftArr[i]))
     return result
 
 print (sum(getDifference(leftArr, rightArr)))
