@@ -30,24 +30,17 @@ def getValidEquations(path):
         allExpressions = makeExpression(terms, getOperatorCombinations(operators, numCombinations))
 
         def evaluateExpression(expression):
-            # Split the expression into tokens (numbers and operators)
-            tokens = re.findall(r'\d+|[+*]', expression)
-            
-            # Initialize the result with the first number
-            result = int(tokens[0])
-            
-            # Iterate through the tokens two at a time (operator followed by number)
+            arr = re.findall(r'\d+|[+*]', expression)
+            result = int(arr[0])
             i = 1
-            while i < len(tokens):
-                operator = tokens[i]
-                num = int(tokens[i + 1])
-                
+            while i < len(arr):
+                operator = arr[i]
+                num = int(arr[i + 1])       
                 if operator == '+':
                     result += num
                 elif operator == '*':
                     result *= num
-                i += 2  # Move to the next operator-number pair
-            
+                i += 2  
             return result
 
         for expression in allExpressions:
