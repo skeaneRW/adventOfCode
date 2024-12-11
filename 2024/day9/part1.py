@@ -3,71 +3,60 @@ import re
 testPath = './testInput.txt'
 testPath2 = './testInput2.txt'
 inputPath = './input.txt'
-chosenPath = testPath2
+chosenPath = inputPath
 
 def readDiskMap(path):
     file = open(path, 'r')
     arr = list(file.read())
-    disk = ''
+    disk = []
     for i, value in enumerate(arr):
         if i % 2 == 0:
             id = str(math.floor(i/2))
-            disk += id * int(value)
+            for i in range(int(value)):
+                disk.append(id)
         else:
-            disk += '.' * int(value)
+            for i in range(int(value)):
+                disk.append('.')
     return disk, int(id)
 
 disk, endingNumber = readDiskMap(chosenPath)
 
-def updateDisk (disk, num):
-    newDisk = disk
-    endingNumber = [num]
+def condense(disk):
+    newDisk = []
+    def countFreeSpace(arr):
+        count = 0
+        for i in arr:
+            if i == '.':
+                count += 1
+        return count
 
-    def getEndingNumber(thisDisk, endNo):
-        if endNo <= 0:
-            return 0
-        pattern = str(endNo)
-        cleanDisk = thisDisk.replace('.', '')
-        lastIndexOfPattern = cleanDisk.rfind(pattern)
-        lengthOfPattern = len(pattern)
-        endOfPatternIndex = lastIndexOfPattern + lengthOfPattern - 1
-        if endOfPatternIndex != len(cleanDisk) - 1:
-            endingNumber.append(endNo - 1)
-        else:
-            endingNumber.append(endNo)
-
-    def condenseDisk(thisDisk, endingNumber):
-        pattern = str(endingNumber)
-        indexOfFirstDot = newDisk.find('.')
-        newStringArray = list(thisDisk)
-        newStringArray[indexOfFirstDot] = str(endingNumber)
-        newString = ''.join(newStringArray)
-        #find the last instance of the pattern and replace each character with a dot
-        lastIndexOfPattern = newString.rfind(pattern)
-        newStringArray = list(newString)
-        for i in range(lastIndexOfPattern, lastIndexOfPattern + len(pattern)):
-            newStringArray[i] = '.'
-        newString = ''.join(newStringArray)
-        print(newString)
-        return newString
-
-    countOfDots = [i for i, char in enumerate(newDisk) if char == '.']
-    for i in range(len(countOfDots)):
-        num = endingNumber[len(endingNumber) - 1]
-        newDisk = condenseDisk(newDisk, num)
-        getEndingNumber(newDisk, num)
-        if i % 200 == 0:
-            print(f'{i / len(countOfDots)}% complete')
+    def fillFreeSpace(arr):
+        freeSpaceIndex = arr.index('.')
+        lastNumber = ''
+        for i in range(len(arr)):
+            if arr[i] != '.':
+                lastNumber = arr[i]
+        arr[freeSpaceIndex] = lastNumber
+        lastNumberIndex = 0
+        for i in range(len(arr)):
+            if arr[i] == lastNumber:
+                lastNumberIndex = i
+        arr[lastNumberIndex] = '.'
+        return arr
+    freeSpaceCount = countFreeSpace(disk)
+    for i in range(freeSpaceCount):
+        newDisk = fillFreeSpace(disk)
+        if i % 100 == 0:
+            print(f'{i/freeSpaceCount}')
     return newDisk
 
-newDisk = updateDisk(disk, endingNumber)
+newDisk = condense(disk)
 
 def checkSum(disk):
-    numberString = disk.replace('.', '')
     sum = 0
-    for i, num in enumerate(numberString):
-        print(f'{i} * {num} = {i * int(num)}')
-        sum += i * int(num)
+    for i, num in enumerate(disk):
+        if num != '.':
+            sum += (int(num) * i)
     return sum
 
 print(checkSum(newDisk))
