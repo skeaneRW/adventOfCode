@@ -1,8 +1,6 @@
 from collections import deque
-from functools import lru_cache
-
-testPath = './testInput.txt'
-inputPath = './input.txt'
+testPath = 'adventofcode/2024/day12/testInput.txt'
+inputPath = 'adventofcode/2024/day12/input.txt'
 chosenPath = inputPath
        
 def getMap(input):
@@ -32,22 +30,33 @@ def getCoordValue(coord):
     x, y = coord
     return map[(x,y)]
 
-def getPerimeter(patch):
-    perimeter = 0
+def getCorners(patch):
+    corners = 0
     for coord in patch:
-        sidesTouched = 4
         x, y = coord
         up = (x, y-1)
         down = (x, y+1)
         left = (x-1, y)
         right = (x+1, y)
-        for coordToTest in [up, down, left, right]:
-            if coordToTest in patch:
-                sidesTouched -= 1
-        perimeter += sidesTouched
-    return perimeter
+        upLeft = (x-1, y-1)
+        upRight = (x+1, y-1)
+        downLeft = (x-1, y+1)
+        downRight = (x+1, y+1)
+        cornerConditions= [
+            up not in patch and left not in patch,
+            up not in patch and right not in patch,
+            down not in patch and left not in patch,
+            down not in patch and right not in patch,
+            up in patch and left in patch and upLeft not in patch,
+            up in patch and right in patch and upRight not in patch,
+            down in patch and left in patch and downLeft not in patch,
+            down in patch and right in patch and downRight not in patch,
+        ]
+        for condition in cornerConditions:
+            if condition:
+                corners += 1
+    return corners
 
-@lru_cache(maxsize=None)
 def getPatch(coord):
     veggie = getCoordValue(coord)
     notReviewed = deque([coord])
@@ -67,15 +76,14 @@ def getPatch(coord):
                     notReviewed.append(newCoord)
         
     
-    perimeter = getPerimeter(patch)
-    return {'name': veggie, 'area': len(patch), 'perimeter':perimeter, 'patch': patch, }
+    corners = getCorners(patch)
+    return {'name': veggie, 'area': len(patch), 'corners':corners, 'patch': patch, }
     
 
 def getPatches():
     previouslyReviewedPatches = []
     patches = []
     for coord in coords:
-        print(f'gettingPatch for {coord}')
         if coord not in previouslyReviewedPatches:
             patch = getPatch(coord)
             patches.append(patch)
@@ -85,6 +93,6 @@ def getPatches():
 patches = getPatches()
 cost = 0
 for patch in patches:
-    cost += patch['area'] * patch['perimeter']
-    print(f'{patch["name"]} has area {patch["area"]} and perimeter {patch["perimeter"]}')
+    cost += patch['area'] * patch['corners']
+    print(f'{patch["name"]} has area {patch["area"]} and {patch["corners"]} sides.')
 print(f'total cost is {cost}')
